@@ -4,43 +4,65 @@ import Gig from "../models/gigModel.js";
 import Stripe from "stripe";
 import { sendMail } from "../utils/sendMail.js";
 import User from "../models/userModel.js";
+import {orderActionMiddleware} from "../middleware/orderActionMiddleware.js";
 export const intent = async (req, res, next) => {
-  const stripe = new Stripe(process.env.STRIPE);
+  try {
+      const stripe = new Stripe(process.env.STRIPE);
+      const gig = await Gig.findById(req.params.id);
 
-  const gig = await Gig.findById(req.params.id);
+      if (!gig) {
+          return next(createError(404, "Gig not found."));
+      }
 
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: gig.price * 100,
-    currency: "usd",
-    automatic_payment_methods: {
-      enabled: true,
-    },
-  });
+      const paymentIntent = await stripe.paymentIntents.create({
+          amount: gig.price * 100,
+          currency: "usd",
+          automatic_payment_methods: {
+              enabled: true,
+          },
+      });
 
-  const newOrder = new Order({
-    gigId: gig._id,
-    img: gig.cover,
-    title: gig.title,
-    buyerId: req.userId,
-    sellerId: gig.userId,
-    price: gig.price,
-    payment_intent: paymentIntent.id,
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-  });
+      const newOrder = new Order({
+          gigId: gig._id,
+          img: gig.cover,
+          title: gig.title,
+          buyerId: req.userId,
+          sellerId: gig.userId,
+          price: gig.price,
+          payment_intent: paymentIntent.id,
+          buyerName:req.username,
+          sellerName:req.username,
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      });
 
-  await newOrder.save();
-  const buyer = await User.findById(req.userId);
-    if (buyer) {
-      const subject = "Yeni Sipariş Onayı Gerekiyor";
-      const text = `Merhaba, siparişinizi onaylamak için aşağıdaki bağlantıya tıklayın: \n http://localhost:5173/order/approve/${newOrder._id}`;
-      const html = `<p>Merhaba ${buyer.name},</p><p>Siparişinizi onaylamak için aşağıdaki bağlantıya tıklayın:</p><a href="http://localhost:5173/order/approve/${newOrder._id}">Siparişi Onayla</a>`;
+      await newOrder.save();
 
-      await sendMail(buyer.email, subject, text, html); 
-    }
+      const buyer = await User.findById(req.userId);
+      if (buyer) {
+          const subject = "Yeni Sipariş Onayı Gerekiyor";
+          const text = `Merhaba, siparişinizi onaylamak veya reddetmek için aşağıdaki bağlantıları kullanın: \n Onayla: http://localhost:5173/payment/${newOrder._id} \n Reddet: http://localhost:5173/home`;
 
-  res.status(200).send({
-    clientSecret: paymentIntent.client_secret,
-  });
+          const html = `
+              <p>Merhaba ${buyer.username},</p>
+              <p>Siparişinizi onaylamak veya reddetmek için aşağıdaki butonları kullanabilirsiniz:</p>
+              <form action="http://localhost:5173/payment/${newOrder._id}" method="get" style="display: inline;">
+                  <button type="submit" style="padding: 10px 15px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer;">Onayla</button>
+              </form>
+              <form action="http://localhost:5173/home" method="get" style="display: inline; margin-left: 10px;">
+                  <button type="submit" style="padding: 10px 15px; background-color: #f44336; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer;">Reddet</button>
+              </form>
+          `;
+
+          await sendMail(buyer.email, subject, text, html);
+      }
+
+      res.status(200).send({
+          clientSecret: paymentIntent.client_secret,
+      });
+  } catch (error) {
+      console.error(error);
+      next(error);
+  }
 };
 
 export const getOrders = async (req, res, next) => {
@@ -49,7 +71,7 @@ export const getOrders = async (req, res, next) => {
     const orders = await Order.find({
       ...(req.isSeller ? { sellerId: req.userId } : { buyerId: req.userId }),
       isCompleted: true,
-    });
+    }).populate('sellerId', 'username').populate('buyerId', 'username');
 
     res.status(200).send(orders);
   } catch (err) {
@@ -74,25 +96,30 @@ export const confirm = async (req, res, next) => {
     next(err);
   }
 };
-export const approveOrder = async (req, res, next) => {
-  try {
-    const order = await Order.findOneAndUpdate(
-      { _id: req.params.id, buyerId: req.userId },
-      { $set: { isApproved: true } },
-      { new: true }
-    );
+export const approveOrder = [
+  // orderActionMiddleware,
+  async (req, res, next) => {
+    try {
+      const order = await Order.findOneAndUpdate(
+        { _id: req.params.id, buyerId: req.userId},
+        { $set: { isApproved: true } },
+        { new: true }
+      );
 
-    if (!order) {
-      return next(createError(404, "Order not found or not authorized."));
+      if (!order) {
+        return next(createError(404, "Order not found or not authorized."));
+      }
+
+      order.isApproved = true;
+      await order.save();
+
+      res.status(200).send({ message: "Order has been approved.", order });
+    } catch (err) {
+      next(err);
     }
-    order.isApproved = true;
-    await order.save();
+  },
+];
 
-    res.status(200).send({ message: "Order has been approved.", order });
-  } catch (err) {
-    next(err);
-  }
-};
 export const removeExpiredOrders = async () => {
   const now = new Date();
 

@@ -9,11 +9,11 @@ const ConversationSchema = new Schema(
       unique: true,
     },
     sellerId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
     },
     buyerId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
     },
     readBySeller: {
@@ -25,6 +25,14 @@ const ConversationSchema = new Schema(
       required: true,
     },
     lastMessage: {
+      type: String,
+      required: false,
+    },
+    sellerName:{
+      type: String,
+      required: false,
+    },
+    buyerName:{
       type: String,
       required: false,
     },

@@ -12,10 +12,12 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import  schedule  from "node-schedule";
 import { removeExpiredOrders } from "./controllers/orderController.js";
+import startScheduledJob from './models/scheduledJob.js';
+import messageService from "./models/messageService.js";
 
 const app = express();
 dotenv.config();
-mongoose.set("strictQuery", true);
+mongoose.set("strictQuery", false);
 
 const connect = async () => {
   try {
@@ -48,5 +50,8 @@ schedule.scheduleJob("0 * * * *", removeExpiredOrders);
 
 app.listen(8800, () => {
   connect();
+  messageService();
+  startScheduledJob();
   console.log("Backend server is running!");
+  
 });

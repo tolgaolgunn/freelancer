@@ -55,6 +55,9 @@ const Message = () => {
                   alt=""
                 />
                 <p>{m.desc}</p>
+                <span className="username">
+                  {m.userId === currentUser._id ? m.senderName : m.receiverName}
+                </span>
               </div>
             ))}
           </div>

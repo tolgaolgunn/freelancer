@@ -7,13 +7,21 @@ const MessageSchema = new Schema({
     required: true,
   },
   userId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   desc: {
     type: String,
     required: true,
   },
+  senderName:{
+    type: String,
+    required: false,
+  },
+  receivedName:{
+    type: String,
+    required: false,
+  }
 },{
   timestamps:true
 });

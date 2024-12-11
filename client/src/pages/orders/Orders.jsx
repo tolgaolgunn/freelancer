@@ -58,7 +58,7 @@ const Orders = () => {
                   <img className="image" src={order.img} alt="" />
                 </td>
                 <td>{order.title}</td>
-                <td>{order.buyerId}</td>
+                <td>{order.buyerName}</td>
                 <td>{order.price}</td>
                 <td>
                   <img

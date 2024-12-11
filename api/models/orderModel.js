@@ -20,12 +20,20 @@ const OrderSchema = new Schema(
       required: true,
     },
     sellerId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
     },
     buyerId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
+    },
+    sellerName:{
+      type: String,
+      required: false,
+    },
+    buyerName: {
+      type: String,
+      required: false,
     },
     isCompleted: {
       type: Boolean,

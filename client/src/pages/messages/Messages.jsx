@@ -43,38 +43,42 @@ const Messages = () => {
             <h1>Mesajlar</h1>
           </div>
           <table>
-            <tr>
-              <th>{currentUser.isSeller ? "Alıcı" : "Seller"}</th>
-              <th>Son Mesaj</th>
-              <th>Tarih</th>
-              <th>İşlem</th>
-            </tr>
-            {data.map((c) => (
-              <tr
-                className={
-                  ((currentUser.isSeller && !c.readBySeller) ||
-                    (!currentUser.isSeller && !c.readByBuyer)) &&
-                  "active"
-                }
-                key={c.id}
-              >
-                <td>{currentUser.isSeller ? c.buyerId : c.sellerId}</td>
-                <td>
-                  <Link to={`/message/${c.id}`} className="link">
-                    {c?.lastMessage?.substring(0, 100)}...
-                  </Link>
-                </td>
-                <td>{moment(c.updatedAt).fromNow()}</td>
-                <td>
-                  {((currentUser.isSeller && !c.readBySeller) ||
-                    (!currentUser.isSeller && !c.readByBuyer)) && (
-                    <button onClick={() => handleRead(c.id)}>
-                      Okundu Olarak İşaretle
-                    </button>
-                  )}
-                </td>
+            <thead>
+              <tr>
+                <th>{currentUser.isSeller ? "Alıcı" : "Satıcı"}</th>
+                <th>Son Mesaj</th>
+                <th>Tarih</th>
+                <th>İşlem</th>
               </tr>
-            ))}
+            </thead>
+            <tbody>
+              {data.map((c) => (
+                <tr
+                  className={
+                    ((currentUser.isSeller && !c.readBySeller) ||
+                      (!currentUser.isSeller && !c.readByBuyer)) &&
+                    "active"
+                  }
+                  key={c.id}
+                >
+                  <td>{currentUser.isSeller ? c.buyerName : c.sellerName}</td>
+                  <td>
+                    <Link to={`/message/${c.id}`} className="link">
+                      {c?.lastMessage?.substring(0, 100)}...
+                    </Link>
+                  </td>
+                  <td>{moment(c.updatedAt).fromNow()}</td>
+                  <td>
+                    {((currentUser.isSeller && !c.readBySeller) ||
+                      (!currentUser.isSeller && !c.readByBuyer)) && (
+                      <button onClick={() => handleRead(c.id)}>
+                        Okundu Olarak İşaretle
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       )}
