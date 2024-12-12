@@ -45,10 +45,10 @@ export const intent = async (req, res, next) => {
           const html = `
               <p>Merhaba ${buyer.username},</p>
               <p>Siparişinizi onaylamak veya reddetmek için aşağıdaki butonları kullanabilirsiniz:</p>
-              <form action="http://localhost:5173/payment/${newOrder._id}" method="get" style="display: inline;">
+              <form action="http://localhost:5173/pay/${gig._id}" method="get" style="display: inline;">
                   <button type="submit" style="padding: 10px 15px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer;">Onayla</button>
               </form>
-              <form action="http://localhost:5173/home" method="get" style="display: inline; margin-left: 10px;">
+              <form action="http://localhost:5173/" method="get" style="display: inline; margin-left: 10px;">
                   <button type="submit" style="padding: 10px 15px; background-color: #f44336; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer;">Reddet</button>
               </form>
           `;
