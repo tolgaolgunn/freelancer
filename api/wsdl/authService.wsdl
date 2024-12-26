@@ -1,0 +1,41 @@
+<definitions name="ConversationService"
+             targetNamespace="http://www.example.org/ConversationService/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://www.example.org/ConversationService/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <message name="getConversationRequest">
+    <part name="conversationId" type="xsd:string"/>
+  </message>
+
+  <message name="getConversationResponse">
+    <part name="conversation" type="xsd:string"/>
+  </message>
+
+  <portType name="ConversationServicePortType">
+    <operation name="getConversation">
+      <input message="tns:getConversationRequest"/>
+      <output message="tns:getConversationResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="ConversationServiceBinding" type="tns:ConversationServicePortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="getConversation">
+      <soap:operation soapAction="http://www.example.org/ConversationService/getConversation"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="ConversationService">
+    <port name="ConversationServicePort" binding="tns:ConversationServiceBinding">
+      <soap:address location="http://localhost:8800/conversations/wsdl"/>
+    </port>
+  </service>
+</definitions>

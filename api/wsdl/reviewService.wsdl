@@ -1,0 +1,41 @@
+<definitions name="ReviewService"
+             targetNamespace="http://www.example.org/ReviewService/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://www.example.org/ReviewService/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <message name="getReviewRequest">
+    <part name="reviewId" type="xsd:string"/>
+  </message>
+
+  <message name="getReviewResponse">
+    <part name="review" type="xsd:string"/>
+  </message>
+
+  <portType name="ReviewServicePortType">
+    <operation name="getReview">
+      <input message="tns:getReviewRequest"/>
+      <output message="tns:getReviewResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="ReviewServiceBinding" type="tns:ReviewServicePortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="getReview">
+      <soap:operation soapAction="http://www.example.org/ReviewService/getReview"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="ReviewService">
+    <port name="ReviewServicePort" binding="tns:ReviewServiceBinding">
+      <soap:address location="http://localhost:8800/reviews/wsdl"/>
+    </port>
+  </service>
+</definitions>

@@ -5,6 +5,8 @@ import Stripe from "stripe";
 import { sendMail } from "../utils/sendMail.js";
 import User from "../models/userModel.js";
 import {orderActionMiddleware} from "../middleware/orderActionMiddleware.js";
+import grpc from "@grpc/grpc-js";
+import soap from "soap";
 export const intent = async (req, res, next) => {
   try {
       const stripe = new Stripe(process.env.STRIPE);
@@ -173,4 +175,37 @@ export const getOrderGrpc = async (call, callback) => {
   }
 };
 
+export const getOrderSoap = async (args, callback) => {
+  try {
+    const { orderId } = args;
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return callback({
+        code: 404,
+        message: "Order not found!",
+      });
+    }
+    callback(null, { order: JSON.stringify(order) });
+  } catch (err) {
+    callback({
+      code: 500,
+      message: err.message,
+    });
+  }
+};
 
+const orderService = {
+  OrderService: {
+    OrderServicePortType: {
+      getOrder: getOrderSoap,
+    },
+  },
+};
+
+const orderWsdlPath = './wsdl/orderService.wsdl';
+
+export const startOrderSoapServer = (app) => {
+  soap.listen(app, '/orders/wsdl', orderService, orderWsdlPath, () => {
+    console.log(`Order SOAP server running at http://localhost:8800/orders/wsdl`);
+  });
+};

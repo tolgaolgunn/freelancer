@@ -1,6 +1,7 @@
 import Gig from "../models/gigModel.js";
 import createError from "../utils/createError.js";
 import grpc from "@grpc/grpc-js";
+import soap from "soap";
 
 export const createGig = async (req, res, next) => {
   if (!req.isSeller)
@@ -79,4 +80,40 @@ export const getGigs = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+export const getGigSoap = async (args, callback) => {
+  try {
+    const { gigId } = args;
+    const gig = await Gig.findById(gigId);
+    if (!gig) {
+      return callback({
+        code: 404,
+        message: "Gig not found!",
+      });
+    }
+    callback(null, { gig: JSON.stringify(gig) });
+  } catch (err) {
+    callback({
+      code: 500,
+      message: err.message,
+    });
+  }
+};
+
+const gigService = {
+  GigService: {
+    GigServicePortType: {
+      getGig: getGigSoap,
+    },
+  },
+};
+
+const gigWsdlPath = './wsdl/gigService.wsdl';
+
+
+export const startGigSoapServer = (app) => {
+  soap.listen(app, '/gigs/wsdl', gigService, gigWsdlPath, () => {
+    console.log(`Gig SOAP server running at http://localhost:8800/gigs/wsdl`);
+  });
 };

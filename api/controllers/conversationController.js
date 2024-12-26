@@ -1,6 +1,7 @@
 import createError from "../utils/createError.js";
 import Conversation from "../models/conversationModel.js";
 import grpc from "@grpc/grpc-js";
+import soap from "soap";
 
 export const createConversation = async (req, res, next) => {
   const newConversation = new Conversation({
@@ -77,4 +78,40 @@ export const getConversationGrpc = async (call, callback) => {
       details: err.message,
     });
   }
+};
+
+export const getConversationSoap = async (args, callback) => {
+  try {
+    const { conversationId } = args;
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return callback({
+        code: 404,
+        message: "Conversation not found!",
+      });
+    }
+    callback(null, { conversation: JSON.stringify(conversation) });
+  } catch (err) {
+    callback({
+      code: 500,
+      message: err.message,
+    });
+  }
+};
+
+const conversationService = {
+  ConversationService: {
+    ConversationServicePortType: {
+      getConversation: getConversationSoap,
+    },
+  },
+};
+
+
+const conversationWsdlPath = './wsdl/conversationService.wsdl';
+
+export const startConversationSoapServer = (app) => {
+  soap.listen(app, '/conversations/wsdl', conversationService, conversationWsdlPath, () => {
+    console.log(`Conversation SOAP server running at http://localhost:8800/conversations/wsdl`);
+  });
 };

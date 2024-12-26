@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import createError from "../utils/createError.js";
 import grpc from "@grpc/grpc-js";
+import soap from "soap";
 
 export const deleteUser = async (req, res, next) => {
   const user = await User.findById(req.params.id);
@@ -34,4 +35,36 @@ export const getUserGrpc = async (call, callback) => {
       details: err.message,
     });
   }
+};
+export const getUserSoap = async (args, callback) => {
+  try {
+    const { userId } = args;
+    const user = await User.findById(userId);
+    if (!user) {
+      return callback({
+        code: 404,
+        message: "User not found!",
+      });
+    }
+    callback(null, { user: JSON.stringify(user) });
+  } catch (err) {
+    callback({
+      code: 500,
+      message: err.message,
+    });
+  }
+};
+const service = {
+  UserService: {
+    UserServicePortType: {
+      getUser: getUserSoap,
+    },
+  },
+};
+const wsdlPath = './wsdl/userService.wsdl';
+
+export const startSoapServer = (app) => {
+  soap.listen(app, '/wsdl', service, wsdlPath, () => {
+    console.log(`SOAP server running at http://localhost:5000/wsdl`);
+  });
 };

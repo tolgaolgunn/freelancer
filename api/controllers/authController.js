@@ -3,6 +3,7 @@ import createError from "../utils/createError.js";
 import bcrypt from "bcrypt";
 import grpc from '@grpc/grpc-js';
 import jwt from "jsonwebtoken";
+import soap from "soap";
 
 export const register = async (req, res, next) => {
   try {
@@ -97,4 +98,59 @@ export const logout = async (req, res) => {
     })
     .status(200)
     .send("User has been logged out.");
+};
+
+export const loginSoap = async (args, callback) => {
+  try {
+    const { username, password } = args;
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return callback({
+        code: 404,
+        message: "User not found!",
+      });
+    }
+
+    const isCorrect = bcrypt.compareSync(password, user.password);
+    if (!isCorrect) {
+      return callback({
+        code: 400,
+        message: "Wrong password or username!",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        isSeller: user.isSeller,
+      },
+      process.env.JWT_KEY
+    );
+
+    const { password: userPassword, ...info } = user._doc;
+    callback(null, { token, user: JSON.stringify(info) });
+  } catch (err) {
+    callback({
+      code: 500,
+      message: err.message,
+    });
+  }
+};
+
+const authService = {
+  AuthService: {
+    AuthServicePortType: {
+      login: loginSoap,
+    },
+  },
+};
+
+const authWsdlPath = './wsdl/authService.wsdl';
+
+
+export const startAuthSoapServer = (app) => {
+  soap.listen(app, '/auth/wsdl', authService, authWsdlPath, () => {
+    console.log(`Auth SOAP server running at http://localhost:8800/auth/wsdl`);
+  });
 };

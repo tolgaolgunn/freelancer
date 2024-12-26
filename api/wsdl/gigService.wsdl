@@ -1,0 +1,41 @@
+<definitions name="GigService"
+             targetNamespace="http://www.example.org/GigService/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://www.example.org/GigService/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <message name="getGigRequest">
+    <part name="gigId" type="xsd:string"/>
+  </message>
+
+  <message name="getGigResponse">
+    <part name="gig" type="xsd:string"/>
+  </message>
+
+  <portType name="GigServicePortType">
+    <operation name="getGig">
+      <input message="tns:getGigRequest"/>
+      <output message="tns:getGigResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="GigServiceBinding" type="tns:GigServicePortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="getGig">
+      <soap:operation soapAction="http://www.example.org/GigService/getGig"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="GigService">
+    <port name="GigServicePort" binding="tns:GigServiceBinding">
+      <soap:address location="http://localhost:8800/gigs/wsdl"/>
+    </port>
+  </service>
+</definitions>

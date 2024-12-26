@@ -14,6 +14,13 @@ import  schedule  from "node-schedule";
 import { removeExpiredOrders } from "./controllers/orderController.js";
 import startScheduledJob from './models/scheduledJob.js';
 import messageService from "./models/messageService.js";
+import { startAuthSoapServer } from './controllers/authController.js'; 
+import { startConversationSoapServer } from './controllers/conversationController.js'; 
+import { startGigSoapServer } from './controllers/gigController.js';
+import { startMessageSoapServer } from './controllers/messageController.js';
+import { startOrderSoapServer } from './controllers/orderController.js';
+import { startReviewSoapServer } from './controllers/reviewController.js';
+import { startSoapServer } from './controllers/userController.js';
 import './grpcServer.js';
 
 const app = express();
@@ -53,6 +60,13 @@ app.listen(8800, () => {
   connect();
   messageService();
   startScheduledJob();
+  startAuthSoapServer(app); 
+  startConversationSoapServer(app); 
+  startGigSoapServer(app);
+  startMessageSoapServer(app);
+  startOrderSoapServer(app);
+  startReviewSoapServer(app);
+  startSoapServer(app);
   console.log("Backend server is running!");
   
 });

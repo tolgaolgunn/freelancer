@@ -1,0 +1,43 @@
+<definitions name="MessageService"
+             targetNamespace="http://www.example.org/MessageService/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://www.example.org/MessageService/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <message name="sendMessageRequest">
+    <part name="conversationId" type="xsd:string"/>
+    <part name="content" type="xsd:string"/>
+    <part name="senderId" type="xsd:string"/>
+  </message>
+
+  <message name="sendMessageResponse">
+    <part name="message" type="xsd:string"/>
+  </message>
+
+  <portType name="MessageServicePortType">
+    <operation name="sendMessage">
+      <input message="tns:sendMessageRequest"/>
+      <output message="tns:sendMessageResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="MessageServiceBinding" type="tns:MessageServicePortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="sendMessage">
+      <soap:operation soapAction="http://www.example.org/MessageService/sendMessage"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="MessageService">
+    <port name="MessageServicePort" binding="tns:MessageServiceBinding">
+      <soap:address location="http://localhost:8800/messages/wsdl"/>
+    </port>
+  </service>
+</definitions>
