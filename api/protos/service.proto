@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+package freelancer;
+
+service AuthService {
+  rpc Login (LoginRequest) returns (LoginResponse);
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+service ConversationService {
+  rpc GetConversation (GetConversationRequest) returns (GetConversationResponse);
+}
+
+message GetConversationRequest {
+  string conversationId = 1;
+}
+
+message GetConversationResponse {
+  string conversationId = 1;
+  repeated Message messages = 2;
+}
+
+message Message {
+  string messageId = 1;
+  string content = 2;
+  string senderId = 3;
+  string timestamp = 4;
+}
+
+service GigService {
+  rpc GetGig (GetGigRequest) returns (GetGigResponse);
+}
+
+message GetGigRequest {
+  string gigId = 1;
+}
+
+message GetGigResponse {
+  string gigId = 1;
+  string title = 2;
+  string description = 3;
+  double price = 4;
+}
+
+service MessageService {
+  rpc SendMessage (SendMessageRequest) returns (SendMessageResponse);
+  rpc GetMessage (GetMessageRequest) returns (GetMessageResponse);
+}
+
+message SendMessageRequest {
+  string conversationId = 1;
+  string content = 2;
+  string senderId = 3;
+}
+
+message SendMessageResponse {
+  string messageId = 1;
+  string content = 2;
+  string senderId = 3;
+  string timestamp = 4;
+}
+
+message GetMessageRequest {
+  string messageId = 1;
+}
+
+message GetMessageResponse {
+  string messageId = 1;
+  string content = 2;
+  string senderId = 3;
+  string timestamp = 4;
+}
+
+service OrderService {
+  rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
+}
+
+message GetOrderRequest {
+  string orderId = 1;
+}
+
+message GetOrderResponse {
+  string orderId = 1;
+  string userId = 2;
+  string status = 3;
+  double total = 4;
+  repeated OrderItem items = 5;
+  string createdAt = 6;
+}
+
+message OrderItem {
+  string productId = 1;
+  int32 quantity = 2;
+}
+
+service ReviewService {
+  rpc GetReview (GetReviewRequest) returns (GetReviewResponse);
+  rpc GetReviews (GetReviewsRequest) returns (GetReviewsResponse);
+}
+
+message GetReviewRequest {
+  string reviewId = 1;
+}
+
+message GetReviewResponse {
+  string reviewId = 1;
+  string userId = 2;
+  string gigId = 3;
+  string content = 4;
+  int32 rating = 5;
+}
+
+message GetReviewsRequest {
+  string gigId = 1;
+}
+
+message GetReviewsResponse {
+  repeated Review reviews = 1;
+}
+
+message Review {
+  string reviewId = 1;
+  string userId = 2;
+  string gigId = 3;
+  string content = 4;
+  int32 rating = 5;
+}
+
+service UserService {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+}
+
+message GetUserRequest {
+  string userId = 1;
+}
+
+message GetUserResponse {
+  string userId = 1;
+  string name = 2;
+  string email = 3;
+}

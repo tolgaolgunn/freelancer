@@ -1,5 +1,6 @@
 import createError from "../utils/createError.js";
 import Conversation from "../models/conversationModel.js";
+import grpc from "@grpc/grpc-js";
 
 export const createConversation = async (req, res, next) => {
   const newConversation = new Conversation({
@@ -48,7 +49,7 @@ export const getSingleConversation = async (req, res, next) => {
   }
 };
 
-export const getConversations = async (req, res, next) => {
+export const getConversationExpress = async (req, res, next) => {
   try {
     const conversations = await Conversation.find(
       req.isSeller ? { sellerId: req.userId } : { buyerId: req.userId }
@@ -56,5 +57,24 @@ export const getConversations = async (req, res, next) => {
     res.status(200).send(conversations);
   } catch (err) {
     next(err);
+  }
+};
+
+export const getConversationGrpc = async (call, callback) => {
+  try {
+    const { conversationId } = call.request;
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return callback({
+        code: grpc.status.NOT_FOUND,
+        details: "Conversation not found!",
+      });
+    }
+    callback(null, conversation);
+  } catch (err) {
+    callback({
+      code: grpc.status.INTERNAL,
+      details: err.message,
+    });
   }
 };

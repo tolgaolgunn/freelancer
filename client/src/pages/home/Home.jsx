@@ -28,7 +28,7 @@ function Home() {
             </p>
             <div className="title">
               <img src="./img/check.png" alt="" />
-              Hızlı yapılan kaliteli işs
+              Hızlı yapılan kaliteli iş
             </div>
             <p>
               Projeniz üzerinde çalışmak için doğru serbest çalışanı bulun.
@@ -58,83 +58,83 @@ function Home() {
           <h1>Pazarları Keşfedin</h1>
           <div className="items">
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=design"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/graphics-design.d32a2f8.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
               <span>Grafik & Tasarım</span>
             </div>
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=marketing"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/online-marketing.74e221b.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
 
-              <span>Dijital Market</span>
+            <span>Dijital Market</span>
             </div>
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=writing"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/writing-translation.32ebe2e.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
               <span>Yazma & Çeviri</span>
             </div>
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=video"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/video-animation.f0d9d71.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
               <span>Video & Animasyon</span>
             </div>
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=music"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/music-audio.320af20.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
               <span>Müzik & Ses</span>
             </div>
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=programming"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/programming.9362366.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
               <span>Programlama & Teknoloji</span>
             </div>
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=business"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/business.bbdf319.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
               <span>İşletme</span>
             </div>
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=lifestyle"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/lifestyle.745b575.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
-              <span>Yaşam Tarzı</span>
+              <span>Yasam Tarzı</span>
             </div>
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=data"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/data.718910f.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
               <span>Veri</span>
             </div>
             <div className="item">
-              <img
+              <a href="http://localhost:5173/gigs?cat=photography"><img
                 src="https://fiverr-res.cloudinary.com/npm-assets/@fiverr/logged_out_homepage_perseus/apps/photography.01cf943.svg"
                 alt=""
-              />
+              /></a>
               <div className="line"></div>
               <span>Fotoğraf</span>
             </div>

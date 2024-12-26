@@ -141,4 +141,36 @@ export const removeExpiredOrders = async () => {
   }
 };
 
+export const getOrderExpress = async (req, res, next) => {
+  try {
+    const orders = await Order.find({
+      ...(req.isSeller ? { sellerId: req.userId } : { buyerId: req.userId }),
+      isCompleted: true,
+    }).populate('sellerId', 'username').populate('buyerId', 'username');
+
+    res.status(200).send(orders);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getOrderGrpc = async (call, callback) => {
+  try {
+    const { orderId } = call.request;
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return callback({
+        code: grpc.status.NOT_FOUND,
+        details: "Order not found!",
+      });
+    }
+    callback(null, order);
+  } catch (err) {
+    callback({
+      code: grpc.status.INTERNAL,
+      details: err.message,
+    });
+  }
+};
+
 

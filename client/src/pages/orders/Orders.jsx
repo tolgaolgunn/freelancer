@@ -49,6 +49,7 @@ const Orders = () => {
               <th>Resim</th>
               <th>Başlık</th>
               <th>Alıcı</th>
+              <th>Satıcı</th>
               <th>Ücret</th>
               <th>İletişim</th>
             </tr>
@@ -59,6 +60,7 @@ const Orders = () => {
                 </td>
                 <td>{order.title}</td>
                 <td>{order.buyerName}</td>
+                <td>{order.sellerName}</td>
                 <td>{order.price}</td>
                 <td>
                   <img

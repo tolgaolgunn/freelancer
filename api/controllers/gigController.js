@@ -1,5 +1,6 @@
 import Gig from "../models/gigModel.js";
 import createError from "../utils/createError.js";
+import grpc from "@grpc/grpc-js";
 
 export const createGig = async (req, res, next) => {
   if (!req.isSeller)
@@ -29,13 +30,34 @@ export const deleteGig = async (req, res, next) => {
     next(err);
   }
 };
-export const getGig = async (req, res, next) => {
+
+export const getGigExpress = async (req, res, next) => {
   try {
     const gig = await Gig.findById(req.params.id);
     if (!gig) next(createError(404, "Gig not found!"));
     res.status(200).send(gig);
   } catch (err) {
     next(err);
+  }
+};
+
+
+export const getGigGrpc = async (call, callback) => {
+  try {
+    const { gigId } = call.request;
+    const gig = await Gig.findById(gigId);
+    if (!gig) {
+      return callback({
+        code: grpc.status.NOT_FOUND,
+        details: "Gig not found!",
+      });
+    }
+    callback(null, gig);
+  } catch (err) {
+    callback({
+      code: grpc.status.INTERNAL,
+      details: err.message,
+    });
   }
 };
 export const getGigs = async (req, res, next) => {

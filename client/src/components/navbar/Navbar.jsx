@@ -86,31 +86,31 @@ function Navbar() {
         <>
           <hr />
           <div className="menu">
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/gigs?cat=design">
               Grafik & Tasarım
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/gigs?cat=video">
               Video & Animasyon
             </Link>
-            <Link className="link menuLink" to="/">
-              Yazma & Çeviri
+            <Link className="link menuLink" to="/gigs?cat=social">
+              Sosyal Medya
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/gigs?cat=ai">
               AI Hizmetleri
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/gigs?cat=marketing">
               Dijital Market
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/gigs?cat=music">
               Müzik & Ses
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/gigs?cat=programming">
               Programlama & Teknoloji
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/gigs?cat=business">
               İşletme
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/gigs?cat=lifestyle">
               Yaşam Tarzı
             </Link>
           </div>

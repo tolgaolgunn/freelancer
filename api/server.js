@@ -14,6 +14,7 @@ import  schedule  from "node-schedule";
 import { removeExpiredOrders } from "./controllers/orderController.js";
 import startScheduledJob from './models/scheduledJob.js';
 import messageService from "./models/messageService.js";
+import './grpcServer.js';
 
 const app = express();
 dotenv.config();
