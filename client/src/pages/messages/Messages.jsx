@@ -52,7 +52,7 @@ const Messages = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((c) => (
+              {data&&data.map((c) => (
                 <tr
                   className={
                     ((currentUser.isSeller && !c.readBySeller) ||

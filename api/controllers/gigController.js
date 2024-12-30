@@ -1,18 +1,38 @@
 import Gig from "../models/gigModel.js";
 import createError from "../utils/createError.js";
+import cloudinary from "../utils/cloudinaryConfig.js";
 import grpc from "@grpc/grpc-js";
 import soap from "soap";
 
 export const createGig = async (req, res, next) => {
   if (!req.isSeller)
-    return next(createError(403, "Only sellers can create a gig!"));
-
-  const newGig = new Gig({
-    userId: req.userId,
-    ...req.body,
-  });
+    return next(createError(403, "Only sellers  can create a gig!"));
 
   try {
+    let coverUrl = "";
+    if (req.body.cover) {
+      const coverResult = await cloudinary.uploader.upload(req.body.cover, {
+        folder: "gigs",
+      });
+      coverUrl = coverResult.secure_url;
+    }
+    const imageUrls = [];
+    if (req.body.images && req.body.images.length > 0) {
+      for (const image of req.body.images) {
+        const imageResult = await cloudinary.uploader.upload(image, {
+          folder: "Freelancer",
+        });
+        imageUrls.push(imageResult.secure_url);
+      }
+    }
+
+    const newGig = new Gig({
+      userId: req.userId,
+      ...req.body,
+      cover: coverUrl,
+      images: imageUrls,
+    });
+
     const savedGig = await newGig.save();
     res.status(201).json(savedGig);
   } catch (err) {
@@ -62,21 +82,23 @@ export const getGigGrpc = async (call, callback) => {
   }
 };
 export const getGigs = async (req, res, next) => {
-  const q = req.query;
+  const { userId, cat, min, max, search, sort } = req.query;
+  
   const filters = {
-    ...(q.userId && { userId: q.userId }),
-    ...(q.cat && { cat: q.cat }),
-    ...((q.min || q.max) && {
+    ...(userId && { userId }),
+    ...(cat && { cat }),
+    ...((min || max) && {
       price: {
-        ...(q.min && { $gt: q.min }),
-        ...(q.max && { $lt: q.max }),
+        ...(min && { $gt: min }),
+        ...(max && { $lt: max }),
       },
     }),
-    ...(q.search && { title: { $regex: q.search, $options: "i" } }),
+    ...(search && { title: { $regex: search, $options: "i" } }),
   };
+
   try {
-    const gigs = await Gig.find(filters).sort({ [q.sort]: -1 });
-    res.status(200).send(gigs);
+    const gigs = await Gig.find(filters).sort({ [sort]: -1 });
+    res.status(200).json(gigs);
   } catch (err) {
     next(err);
   }

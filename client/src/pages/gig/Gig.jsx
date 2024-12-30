@@ -53,7 +53,7 @@ function Gig() {
               <div className="user">
                 <img
                   className="pp"
-                  src={dataUser.img || "/img/noavatar.jpg"}
+                  src={dataUser?.img || "/img/noavatar.jpg"}
                   alt=""
                 />
                 <span>{dataUser.username}</span>
@@ -69,13 +69,13 @@ function Gig() {
                 )}
               </div>
             )}
-            <Slider slidesToShow={1} arrowsScroll={1} className="slider">
-              {data.images.map((img) => (
-                <img key={img} src={img} alt="" />
-              ))}
-            </Slider>
+            <div className="images">
+  {data.images?.map((img, i) => (
+    <img src={img} alt="" key={i} style={{ width: "150px", height: "auto", margin: "10px" }} />
+  ))}
+</div>
             <h2>Bu İlan Hakkında</h2>
-            <p>{data.desc}</p>
+            <p>{data?.desc}</p>
             {isLoadingUser ? (
               "Yükleniyor..."
             ) : errorUser ? (
@@ -84,9 +84,9 @@ function Gig() {
               <div className="seller">
                 <h2>Satıcı Hakkında</h2>
                 <div className="user">
-                  <img src={dataUser.img || "/img/noavatar.jpg"} alt="" />
+                  <img src={dataUser?.img || "/img/noavatar.jpg"} alt="" />
                   <div className="info">
-                    <span>{dataUser.username}</span>
+                    <span>{dataUser?.username}</span>
                     {!isNaN(data.totalStars / data.starNumber) && (
                       <div className="stars">
                         {Array(Math.round(data.totalStars / data.starNumber))

@@ -52,14 +52,14 @@ function Navbar() {
                 <div className="options">
                   {currentUser.isSeller && (
                     <>
-                      <Link className="link" to="/mygigs">
-                        İlanlar
-                      </Link>
                       <Link className="link" to="/add">
                         Yeni İlan Ekle
                       </Link>
                     </>
                   )}
+                      <Link className="link" to="/gigs">
+                        İlanlar
+                      </Link>
                   <Link className="link" to="/orders">
                     Teklifler
                   </Link>

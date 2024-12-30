@@ -13,19 +13,21 @@ function Gigs() {
 
   const { search } = useLocation();
 
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["gigs"],
-    queryFn: () =>
-      newRequest
-        .get(
-          `/gigs${search}&min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`
-        )
-        .then((res) => {
-          return res.data;
-        }),
-  });
+  const fetchGigs = () => {
+    const queryParams = new URLSearchParams(search);
+    queryParams.set("min", minRef.current.value);
+    queryParams.set("max", maxRef.current.value);
+    queryParams.set("sort", sort);
 
-  console.log(data);
+    return newRequest
+      .get(`/gigs/?${queryParams.toString()}`)
+      .then((res) => res.data);
+  };
+
+  const { isLoading, error, data, refetch } = useQuery({
+    queryKey: ["gigs", search, sort],
+    queryFn: fetchGigs,
+  });
 
   const reSort = (type) => {
     setSort(type);
@@ -34,7 +36,7 @@ function Gigs() {
 
   useEffect(() => {
     refetch();
-  }, [sort]);
+  }, [sort, search]);
 
   const apply = () => {
     refetch();
@@ -43,11 +45,9 @@ function Gigs() {
   return (
     <div className="gigs">
       <div className="container">
-        <span className="breadcrumbs">Freelancer  Grafik & Tasarım </span>
+        <span className="breadcrumbs">Freelancer Grafik & Tasarım</span>
         <h1>AI Sanatçıları</h1>
-        <p>
-          Freelancer'ın AI sanatçılarıyla sanat ve teknolojinin sınırlarını keşfedin.
-        </p>
+        <p>Freelancer'ın AI sanatçılarıyla sanat ve teknolojinin sınırlarını keşfedin.</p>
         <div className="menu">
           <div className="left">
             <span>Bütçe</span>
@@ -57,9 +57,7 @@ function Gigs() {
           </div>
           <div className="right">
             <span className="sortBy">Sırala</span>
-            <span className="sortType">
-              {sort === "sales" ? "En Çok Satan" : "En Yeni"}
-            </span>
+            <span className="sortType">{sort === "sales" ? "En Çok Satan" : "En Yeni"}</span>
             <img src="./img/down.png" alt="" onClick={() => setOpen(!open)} />
             {open && (
               <div className="rightMenu">
@@ -78,7 +76,9 @@ function Gigs() {
             ? "Yükleniyor..."
             : error
             ? "Bir şeyler ters gitti!"
-            : data.map((gig) => <GigCard key={gig._id} item={gig} />)}
+            : Array.isArray(data) && data.length > 0
+            ? data?.map((gig) => <GigCard key={gig._id} item={gig} />)
+            : "No gigs found"}
         </div>
       </div>
     </div>

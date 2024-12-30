@@ -1,90 +1,57 @@
-.add {
+.add-container {
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9;
+}
 
-  .container {
-    width: 1400px;
-    padding: 50px 0px;
+.add-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
 
-    h1 {
-      width: max-content;
-      margin-bottom: 30px;
-      color: gray;
-      font-weight: 300;
-    }
+.add-form h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
 
-    .sections {
-      display: flex;
-      justify-content: space-between;
-      gap: 100px;
+.form-group {
+  margin-bottom: 15px;
+}
 
-      label {
-        color: gray;
-        font-size: 18px;
-      }
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
 
-      .info,
-      .details {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        justify-content: space-between;
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
 
-        input,
-        select,
-        textarea {
-          padding: 20px;
-        }
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-        .images{
-          display: flex;
-          align-items: center;
-          gap: 20px;
-
-          .imagesInputs{
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-          }
-        }
-
-        button {
-          border: none;
-          padding: 20px;
-          color: white;
-          font-weight: 500;
-          font-size: 18px;
-          background-color: #1dbf73;
-          cursor: pointer;
-        }
-
-        .add{
-          display: flex;
-          justify-content: space-between;
-
-          input{
-            width: 80%;
-          }
-        }
-
-        .addedFeatures{
-          display: flex;
-          gap: 20px;
-
-          button{
-            height: 30px;
-            font-size: 12px;
-            font-weight: 400;
-            background: transparent;
-            color: red;
-            border: 1px solid red;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-          }
-        }
-      }
-    }
-  }
+.submit-button:hover {
+  background-color: #0056b3;
 }
